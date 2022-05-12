@@ -20,7 +20,9 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate();
+//        Jackson2JsonRedisSerializer jacksonSeial = new Jackson2JsonRedisSerializer(Object.class);
         //默认的Key序列化器为:JdkSerializationRedisSerializer
+        //使用StringRedisSerializer来序列化和反序列化redis的key值
         template.setKeySerializer(new StringRedisSerializer());
         template.setConnectionFactory(redisConnectionFactory);
         return template;

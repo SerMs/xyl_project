@@ -6,16 +6,17 @@ import com.ms.reggie.dto.SetmealDto;
 import com.ms.reggie.pojo.Category;
 import com.ms.reggie.pojo.Setmeal;
 import com.ms.reggie.service.CategoryService;
-import com.ms.reggie.service.SetmealDishService;
 import com.ms.reggie.service.SetmealService;
 import com.ms.reggie.util.R;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -29,14 +30,14 @@ import java.util.stream.Collectors;
 @RequestMapping("setmeal")
 public class SetmealController {
 
-    @Autowired
+    @Resource
     private SetmealService setmealService;
 
-    @Autowired
+    @Resource
     private CategoryService categoryService;
 
-    @Autowired
-    private SetmealDishService setmealDishService;
+    @Resource
+    private RedisTemplate redisTemplate;
 
     /**
      * 新增套餐
@@ -115,7 +116,7 @@ public class SetmealController {
     }
 
     /**
-     * 根据条件查询套餐数据
+     * 根据条件查询套餐数据 前台/后台
      *
      * @param setmeal
      * @return
@@ -123,14 +124,28 @@ public class SetmealController {
     @GetMapping("/list")
     public R<List<Setmeal>> list(Setmeal setmeal) {
         log.info("setmeal:{}", setmeal);
+        List<Setmeal> list = null;
+
+        //dish_123_1
+        String key = "setmeal_" + setmeal.getCategoryId() + "_" + setmeal.getStatus();
+        //先从缓存中获取到redis数据
+        list = (List<Setmeal>) redisTemplate.opsForValue().get(key);
+        //如果存在,直接返回,无需查询数据库
+        if (list != null) {
+            return R.success(list);
+        }
         //条件构造器
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(setmeal.getName()), Setmeal::getName, setmeal.getName());
         queryWrapper.eq(null != setmeal.getCategoryId(), Setmeal::getCategoryId, setmeal.getCategoryId());
         queryWrapper.eq(null != setmeal.getStatus(), Setmeal::getStatus, setmeal.getStatus());
         queryWrapper.orderByDesc(Setmeal::getUpdateTime);
+        list = setmealService.list(queryWrapper);
 
-        return R.success(setmealService.list(queryWrapper));
+        //如果不存在,需要查询数据库,将查询到的菜品数据缓存到redis中
+        redisTemplate.opsForValue().set(key, list, 60, TimeUnit.MINUTES);
+
+        return R.success(list);
     }
 
 
