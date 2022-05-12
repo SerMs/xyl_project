@@ -2,39 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Document</title>
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="../../plugins/element-ui/index.css"/>
-    <link rel="stylesheet" href="../../styles/common.css"/>
-    <link rel="stylesheet" href="../../styles/page.css"/>
+    <link href="../../plugins/element-ui/index.css" rel="stylesheet"/>
+    <link href="../../styles/common.css" rel="stylesheet"/>
+    <link href="../../styles/page.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="dashboard-container" id="food-app">
     <div class="container">
         <div class="tableBar">
             <el-input
-                    v-model="input"
+                    @keyup.enter.native="handleQuery"
+                    clearable
                     placeholder="请输入菜品名称"
                     style="width: 250px"
-                    clearable
-                    @keyup.enter.native="handleQuery"
+                    v-model="input"
             >
                 <i
-                        slot="prefix"
-                        class="el-input__icon el-icon-search"
-                        style="cursor: pointer"
                         @click="init"
+                        class="el-input__icon el-icon-search"
+                        slot="prefix"
+                        style="cursor: pointer"
                 ></i>
             </el-input>
             <div class="tableLab">
-                <span class="span-btn delBut non" @click="deleteHandle('批量', null)">批量删除</span>
-                <span class="span-btn blueBug non" @click="statusHandle('1')">批量启售</span>
-                <span style="border:none;" class="span-btn delBut non" @click="statusHandle('0')">批量停售</span>
+                <span @click="deleteHandle('批量', null)" class="span-btn delBut non">批量删除</span>
+                <span @click="statusHandle('1')" class="span-btn blueBug non">批量启售</span>
+                <span @click="statusHandle('0')" class="span-btn delBut non" style="border:none;">批量停售</span>
                 <el-button
-                        type="primary"
                         @click="addFoodtype('add')"
+                        type="primary"
                 >
                     + 新建菜品
                 </el-button>
@@ -42,32 +42,32 @@
         </div>
         <el-table
                 :data="tableData"
-                stripe
-                class="tableBox"
                 @selection-change="handleSelectionChange"
+                class="tableBox"
+                stripe
         >
             <el-table-column
                     type="selection"
                     width="25"
             ></el-table-column>
             <el-table-column
-                    prop="name"
                     label="菜品名称"
+                    prop="name"
             ></el-table-column>
-            <el-table-column prop="image" label="图片" align="center">
+            <el-table-column align="center" label="图片" prop="image">
                 <template slot-scope="{ row }">
-                    <el-image style="width: auto; height: 40px; border:none;cursor: pointer;"
+                    <el-image :preview-src-list="[ `/common/download?name=${row.image}` ]"
                               :src="getImage(row.image)"
-                              :preview-src-list="[ `/common/download?name=${row.image}` ]">
-                        <div slot="error" class="image-slot">
+                              style="width: auto; height: 40px; border:none;cursor: pointer;">
+                        <div class="image-slot" slot="error">
                             <img src="./../../images/noImg.png" style="width: auto; height: 40px; border:none;">
                         </div>
                     </el-image>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="categoryName"
                     label="菜品分类"
+                    prop="categoryName"
             ></el-table-column>
             <el-table-column label="售价">
                 <template slot-scope="scope">
@@ -80,37 +80,37 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="updateTime"
                     label="最后操作时间"
+                    prop="updateTime"
             >
             </el-table-column>
             <el-table-column
+                    align="center"
                     label="操作"
                     width="160"
-                    align="center"
             >
                 <template slot-scope="scope">
                     <el-button
-                            type="text"
-                            size="small"
-                            class="blueBug"
                             @click="addFoodtype(scope.row.id)"
+                            class="blueBug"
+                            size="small"
+                            type="text"
                     >
                         修改
                     </el-button>
                     <el-button
-                            type="text"
-                            size="small"
-                            class="blueBug"
                             @click="statusHandle(scope.row)"
+                            class="blueBug"
+                            size="small"
+                            type="text"
                     >
                         {{ scope.row.status == '0' ? '启售' : '停售' }}
                     </el-button>
                     <el-button
-                            type="text"
-                            size="small"
-                            class="delBut non"
                             @click="deleteHandle('单删', scope.row.id)"
+                            class="delBut non"
+                            size="small"
+                            type="text"
                     >
                         删除
                     </el-button>
@@ -118,14 +118,14 @@
             </el-table-column>
         </el-table>
         <el-pagination
-                class="pageList"
-                :page-sizes="[10, 20, 30, 40]"
-                :page-size="pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="counts"
-                @size-change="handleSizeChange"
                 :current-page.sync="page"
+                :page-size="pageSize"
+                :page-sizes="[10, 20, 30, 40]"
+                :total="counts"
                 @current-change="handleCurrentChange"
+                @size-change="handleSizeChange"
+                class="pageList"
+                layout="total, sizes, prev, pager, next, jumper"
         ></el-pagination>
     </div>
 </div>
