@@ -26,9 +26,10 @@
         </div>
     </div>
     <div class="divBody" v-if="orderList.length > 0">
+        <!-- @load="getList" -->
         <van-list
                 :finished="finished"
-                @load="getList"
+                
                 finished-text="没有更多了"
                 v-model="loading"
         >

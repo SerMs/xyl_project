@@ -30,7 +30,7 @@
             <div @click="toAddressPage">
                 <div class="address">{{address.detail}}</div>
                 <div class="name">
-                    <span>{{address.consignee}}{{address.sex === '1' ? '先生' : '女士'}}</span>
+                    <span>{{address.consignee}}{{address.sex === 1 ? '先生' : '女士'}}</span>
                     <span>{{address.phone}}</span>
                 </div>
                 <i class="el-icon-arrow-right"></i>
@@ -110,7 +110,7 @@
                     phone: '',//手机号
                     consignee: '',//姓名
                     detail: '',//详细地址
-                    sex: '1',
+                    sex: '',
                     id: undefined
                 },
                 finishTime: '',//送达时间
@@ -158,6 +158,8 @@
                 const res = await getDefaultAddressApi()
                 if (res.code === 1) {
                     this.address = res.data
+                    this.address.sex = res.data.sex
+                    console.log("this.address.sex", this.address.sex)
                     this.getFinishTime()
                 } else {
                     window.requestAnimationFrame(() => {

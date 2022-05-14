@@ -101,5 +101,13 @@ public class UserController {
         }
         return R.error("登录失败");
     }
+
+
+    @PostMapping("/loginout")
+    public R<String> loginout(HttpSession session) {
+        //清理Session中保存的当前登录员工的id
+        session.removeAttribute("user");
+        return R.success("退出成功");
+    }
 }
 
