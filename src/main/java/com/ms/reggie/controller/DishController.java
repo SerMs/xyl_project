@@ -13,12 +13,12 @@ import com.ms.reggie.util.R;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -44,9 +44,6 @@ public class DishController {
     @Resource
     private CategoryService categoryService;
 
-
-    @Resource
-    private RedisTemplate redisTemplate;
 
     /**
      * 分页查询菜品列表
@@ -105,14 +102,23 @@ public class DishController {
      * @return
      */
     @PostMapping
+    @CacheEvict(value = "DishCache", allEntries = true)
     public R<String> save(@RequestBody DishDto dishDto) {
-        log.info("dto:==>{}", dishDto.toString());
-        //清理某个分类下面的菜品缓存数据
-        String keys = "dish_" + dishDto.getCategoryId() + "_1";
-        redisTemplate.delete(keys);
         dishService.saveWithFlavor(dishDto);
-
         return R.success("新增菜品成功");
+    }
+
+    /**
+     * 修改菜品
+     *
+     * @param dishDto
+     * @return
+     */
+    @PutMapping
+    @CacheEvict(value = "DishCache", allEntries = true)
+    public R<String> put(@RequestBody DishDto dishDto) {
+        dishService.updateWithFlavor(dishDto);
+        return R.success("更新菜品成功");
     }
 
     /**
@@ -128,32 +134,13 @@ public class DishController {
     }
 
     /**
-     * 修改菜品
-     *
-     * @param dishDto
-     * @return
-     */
-    @PutMapping
-    private R<String> put(@RequestBody DishDto dishDto) {
-        dishService.updateWithFlavor(dishDto);
-
-        //清理所有菜品的缓存数据
-//        Set keys = redisTemplate.keys("dish_*");
-
-        //清理某个分类下面的菜品缓存数据
-        String keys = "dish_" + dishDto.getCategoryId() + "_1";
-        redisTemplate.delete(keys);
-
-        return R.success("更新菜品成功");
-    }
-
-    /**
      * 条件删除,多条或单条
      *
      * @param ids
      * @return
      */
     @DeleteMapping
+    @CacheEvict(value = "DishCache", allEntries = true)
     public R<String> deleteDish(@RequestParam List<Long> ids) {
         dishService.deleteByIdWithFlavor(ids);
         return R.success("删除成功");
@@ -168,15 +155,12 @@ public class DishController {
      * @return
      */
     @PostMapping("/status")
+    @CacheEvict(value = "DishCache", allEntries = true)
     public R<String> postDish(@RequestParam List<Long> ids, @RequestParam int status) {
-        LambdaQueryWrapper<Dish> dishLambdaQueryWrapper = new LambdaQueryWrapper<>();
         for (Long id : ids) {
             Dish byId = dishService.getById(id);
             byId.setStatus(status);
             dishService.updateById(byId);
-            //Redis删除缓存
-            String keys = "dish_" + byId.getCategoryId() + "_1";
-            redisTemplate.delete(keys);
         }
         return R.success("操作成功");
     }
@@ -205,50 +189,9 @@ public class DishController {
 //        return R.success(list);
 //    }
     @GetMapping("/list")
+    @Cacheable(value = "DishCache", key = "#dish.categoryId + '_' + #dish.status", condition = "#dish.getStatus() != null")
     public R<List<DishDto>> list(Dish dish) {
-        log.info("dish:{}", dish);
-        List<DishDto> dishDtos = null;
-
-        if (dish.getStatus() != null) {
-            //dish_123_1
-            String key = "dish_" + dish.getCategoryId() + "_" + dish.getStatus();
-
-            //先从Redis缓存中获取到数据
-            dishDtos = (List<DishDto>) redisTemplate.opsForValue().get(key);
-            //如果存在,直接返回,无需查询数据库
-            if (dishDtos != null) {
-                return R.success(dishDtos);
-            }
-            LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.like(StringUtils.isNotEmpty(dish.getName()), Dish::getName, dish.getName());
-            queryWrapper.eq(null != dish.getCategoryId(), Dish::getCategoryId, dish.getCategoryId());
-            //添加条件，查询状态为1（起售状态）的菜品
-            queryWrapper.eq(Dish::getStatus, 1);
-            queryWrapper.orderByDesc(Dish::getUpdateTime);
-
-            //插入条件菜品对应的口味信息
-            List<Dish> dishs = dishService.list(queryWrapper);
-
-            dishDtos = dishs.stream().map(item -> {
-                DishDto dishDto = new DishDto();
-                BeanUtils.copyProperties(item, dishDto);
-                Category category = categoryService.getById(item.getCategoryId());
-                if (category != null) {
-                    dishDto.setCategoryName(category.getName());
-                }
-                LambdaQueryWrapper<DishFlavor> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(DishFlavor::getDishId, item.getId());
-
-                dishDto.setFlavors(dishFlavorService.list(wrapper));
-                return dishDto;
-            }).collect(Collectors.toList());
-
-            //如果不存在,需要查询数据库,将查询到的菜品数据缓存到redis中
-            redisTemplate.opsForValue().set(key, dishDtos, 60, TimeUnit.MINUTES);
-
-            return R.success(dishDtos);
-        }
-
+//        log.info("dish:{}", dish);
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(dish.getName()), Dish::getName, dish.getName());
         queryWrapper.eq(null != dish.getCategoryId(), Dish::getCategoryId, dish.getCategoryId());
@@ -259,7 +202,7 @@ public class DishController {
         //插入条件菜品对应的口味信息
         List<Dish> dishs = dishService.list(queryWrapper);
 
-        dishDtos = dishs.stream().map(item -> {
+        List<DishDto> dishDtos = dishs.stream().map(item -> {
             DishDto dishDto = new DishDto();
             BeanUtils.copyProperties(item, dishDto);
             Category category = categoryService.getById(item.getCategoryId());
@@ -272,10 +215,7 @@ public class DishController {
             dishDto.setFlavors(dishFlavorService.list(wrapper));
             return dishDto;
         }).collect(Collectors.toList());
-
         return R.success(dishDtos);
-
-
     }
 }
 

@@ -9,6 +9,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * <p>
+ * Reids缓存
  * </p>
  *
  * @author SerMs

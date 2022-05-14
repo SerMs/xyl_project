@@ -13,7 +13,6 @@ import com.ms.reggie.service.SetmealDishService;
 import com.ms.reggie.util.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,9 +35,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Resource
     private SetmealDishService setmealDishService;
-
-    @Resource
-    private RedisTemplate redisTemplate;
 
     /**
      * 新增菜品,同时保存对应的口味数据
@@ -117,9 +113,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      */
     @Override
     public void deleteByIdWithFlavor(List<Long> ids) {
-        //删除Redis缓存
-        List<Dish> dishList = this.listByIds(ids);
-        dishList.stream().map(dish -> "dish_" + dish.getCategoryId() + "_1").forEach(keys -> redisTemplate.delete(keys));
         for (Long id : ids) {
             LambdaQueryWrapper<SetmealDish> setmealDishLambdaQueryWrapper = new LambdaQueryWrapper<>();
             long count = setmealDishService.count(setmealDishLambdaQueryWrapper.eq(SetmealDish::getDishId, id));
@@ -129,7 +122,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
             }
             LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(DishFlavor::getDishId, id);
-
 
             //根据菜品id删除对应的口味信息
             dishFlavorService.remove(queryWrapper);
