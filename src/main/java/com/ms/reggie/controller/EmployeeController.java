@@ -176,5 +176,19 @@ public class EmployeeController {
         }
         return R.error("出错了~");
     }
+
+
+    /**
+     * 删除员工
+     *
+     * @param employee
+     * @return
+     */
+    @DeleteMapping
+    public R<String> deleteByDefault(@RequestBody Employee employee) {
+        log.info("根据id删除员工信息:{}", employee.toString());
+        employeeService.removeById(employee.getId());
+        return R.success("删除成功");
+    }
 }
 

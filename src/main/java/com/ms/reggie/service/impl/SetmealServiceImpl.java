@@ -12,9 +12,11 @@ import com.ms.reggie.util.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,9 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     @Autowired
     private SetmealDishService setmealDishService;
 
+    @Resource
+    private RedisTemplate redisTemplate;
+
     /**
      * 新增套餐，同时需要保存套餐和菜品的关联关系
      *
@@ -40,6 +45,8 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     public void saveWithDish(SetmealDto setmealDto) {
         //保存套餐的基本信息，操作setmeal，执行insert操作
         this.save(setmealDto);
+        String keys = "setmeal_" + setmealDto.getCategoryId() + "_1";
+        redisTemplate.delete(keys);
 
         List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
         setmealDishes.stream().map((item) -> {
@@ -58,6 +65,12 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
      */
     @Transactional
     public void removeWithDish(List<Long> ids) {
+
+//        List<Setmeal> setmeals = this.listByIds(ids);
+//        for (Setmeal setmeal : setmeals) {
+//            String keys = "setmeal_" + setmeal.getCategoryId() + "_1";
+//            redisTemplate.delete(keys);
+//        }
         //select count(*) from setmeal where id in (1,2,3) and status = 1
         //查询套餐状态，确定是否可用删除
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper();

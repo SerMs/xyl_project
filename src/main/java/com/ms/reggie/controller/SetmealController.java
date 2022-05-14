@@ -164,6 +164,14 @@ public class SetmealController {
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(Setmeal::getId, ids);
         List<Setmeal> list = setmealService.list(queryWrapper);
+
+        //redis清理缓存
+        for (Setmeal setmeal : list) {
+            String keys = "setmeal_" + setmeal.getCategoryId() + "_1";
+            redisTemplate.delete(keys);
+        }
+
+
         List<Setmeal> list2 = list.stream().map((item) -> {
             item.setStatus(status);
             return item;
@@ -189,6 +197,8 @@ public class SetmealController {
     @PutMapping
     public R<String> updateById(@RequestBody SetmealDto setmealDto) {
         setmealService.updateWithDish(setmealDto);
+        String keys = "setmeal_" + setmealDto.getCategoryId() + "_1";
+        redisTemplate.delete(keys);
         return R.success("套餐修改成功");
     }
 }

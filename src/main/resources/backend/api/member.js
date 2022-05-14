@@ -1,3 +1,4 @@
+//分页查询员工
 function getMemberList(params) {
     return $axios({
         url: '/employee/page',
@@ -11,7 +12,9 @@ function enableOrDisableEmployee(params) {
     return $axios({
         url: '/employee',
         method: 'put',
-        data: {...params}
+        data: {
+            ...params
+        }
     })
 }
 
@@ -20,7 +23,9 @@ function addEmployee(params) {
     return $axios({
         url: '/employee',
         method: 'post',
-        data: {...params}
+        data: {
+            ...params
+        }
     })
 }
 
@@ -29,7 +34,20 @@ function editEmployee(params) {
     return $axios({
         url: '/employee',
         method: 'put',
-        data: {...params}
+        data: {
+            ...params
+        }
+    })
+}
+
+//删除员工
+function deleteMember(params) {
+    return $axios({
+        url: `/employee/`,
+        method: 'delete',
+        data: {
+            ...params
+        }
     })
 }
 

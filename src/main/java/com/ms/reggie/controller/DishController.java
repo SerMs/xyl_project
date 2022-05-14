@@ -209,16 +209,46 @@ public class DishController {
         log.info("dish:{}", dish);
         List<DishDto> dishDtos = null;
 
-        //dish_123_1
-        String key = "dish_" + dish.getCategoryId() + "_" + dish.getStatus();
+        if (dish.getStatus() != null) {
+            //dish_123_1
+            String key = "dish_" + dish.getCategoryId() + "_" + dish.getStatus();
 
-        //先从Redis缓存中获取到数据
-        dishDtos = (List<DishDto>) redisTemplate.opsForValue().get(key);
+            //先从Redis缓存中获取到数据
+            dishDtos = (List<DishDto>) redisTemplate.opsForValue().get(key);
+            //如果存在,直接返回,无需查询数据库
+            if (dishDtos != null) {
+                return R.success(dishDtos);
+            }
+            LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.like(StringUtils.isNotEmpty(dish.getName()), Dish::getName, dish.getName());
+            queryWrapper.eq(null != dish.getCategoryId(), Dish::getCategoryId, dish.getCategoryId());
+            //添加条件，查询状态为1（起售状态）的菜品
+            queryWrapper.eq(Dish::getStatus, 1);
+            queryWrapper.orderByDesc(Dish::getUpdateTime);
 
-        //如果存在,直接返回,无需查询数据库
-        if (dishDtos != null) {
+            //插入条件菜品对应的口味信息
+            List<Dish> dishs = dishService.list(queryWrapper);
+
+            dishDtos = dishs.stream().map(item -> {
+                DishDto dishDto = new DishDto();
+                BeanUtils.copyProperties(item, dishDto);
+                Category category = categoryService.getById(item.getCategoryId());
+                if (category != null) {
+                    dishDto.setCategoryName(category.getName());
+                }
+                LambdaQueryWrapper<DishFlavor> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(DishFlavor::getDishId, item.getId());
+
+                dishDto.setFlavors(dishFlavorService.list(wrapper));
+                return dishDto;
+            }).collect(Collectors.toList());
+
+            //如果不存在,需要查询数据库,将查询到的菜品数据缓存到redis中
+            redisTemplate.opsForValue().set(key, dishDtos, 60, TimeUnit.MINUTES);
+
             return R.success(dishDtos);
         }
+
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(dish.getName()), Dish::getName, dish.getName());
         queryWrapper.eq(null != dish.getCategoryId(), Dish::getCategoryId, dish.getCategoryId());
@@ -243,10 +273,9 @@ public class DishController {
             return dishDto;
         }).collect(Collectors.toList());
 
-        //如果不存在,需要查询数据库,将查询到的菜品数据缓存到redis中
-        redisTemplate.opsForValue().set(key, dishDtos, 60, TimeUnit.MINUTES);
-
         return R.success(dishDtos);
+
+
     }
 }
 
