@@ -1,5 +1,6 @@
 package com.ms.reggie;
 
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ServletComponentScan
 @MapperScan("com.ms.reggie.mapper")
 @EnableTransactionManagement
+@ApiSupport(author = "SerMs")
 @EnableCaching      //开启SpringCache注解方式缓存功能
 public class ReggieApplication {
     public static void main(String[] args) {

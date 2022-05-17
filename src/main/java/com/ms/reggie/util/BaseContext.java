@@ -25,7 +25,7 @@ public class BaseContext {
      * @return
      */
     public static Long getCurrentId() {
-        log.info("BaseContext::{}", threadLocal.get());
+        log.info("当前登录的用户id为:{}", threadLocal.get());
         return threadLocal.get();
     }
 

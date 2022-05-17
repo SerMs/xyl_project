@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -16,6 +17,7 @@
     <!--本页面内容的样式-->
     <link href="./../styles/user.css" rel="stylesheet"/>
 </head>
+
 <body>
 <div class="app" id="user">
     <div class="divHead">
@@ -41,6 +43,12 @@
             <div @click="toOrderPage" class="item">
                 <img src="./../images/orders.png"/>
                 <span>历史订单</span>
+                <i class="el-icon-arrow-right"></i>
+            </div>
+            <div class="divSplit"></div>
+            <div @click="toUserPage" class="item">
+                <img src="./../images/orders.png"/>
+                <span>个人信息</span>
                 <i class="el-icon-arrow-right"></i>
             </div>
         </div>
@@ -126,6 +134,11 @@
                     window.location.href = '/front/page/order.html'
                 })
             },
+            toUserPage() {
+                window.requestAnimationFrame(() => {
+                    window.location.href = '/front/page/user-update.html'
+                })
+            },
             initData() {
                 this.getLatestOrder()
             },
@@ -194,4 +207,5 @@
     })
 </script>
 </body>
+
 </html>

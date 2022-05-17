@@ -30,3 +30,5 @@ mybatis-plus:
 reggie:
   path: D:\B站\黑马瑞吉外卖\1 瑞吉外卖项目\资料\图片资源\
 
+knife4j:
+  enable: true

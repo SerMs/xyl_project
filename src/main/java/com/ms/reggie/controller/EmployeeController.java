@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ms.reggie.pojo.Employee;
 import com.ms.reggie.service.EmployeeService;
+import com.ms.reggie.util.BaseContext;
 import com.ms.reggie.util.R;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -99,11 +100,6 @@ public class EmployeeController {
         //设置初始密码123456,需要进行MD5加密
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
-        //创建时间
-//        employee.setCreateTime(LocalDateTime.now());
-        //跟新时间
-//        employee.setUpdateTime(LocalDateTime.now());
-
         //获得当前登录用户的id
         Long empId = (Long) request.getSession().getAttribute("employee");
 
@@ -152,10 +148,9 @@ public class EmployeeController {
     @PutMapping
     public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
         log.info(employee.toString());
+        //线程id
         long id = Thread.currentThread().getId();
         log.info("线程id为:{}", id);
-//        employee.setUpdateUser((Long) request.getSession().getAttribute("employee"));
-//        employee.setUpdateTime(LocalDateTime.now());
         employeeService.updateById(employee);
 
         return R.success("员工信息修改成功");
@@ -170,11 +165,18 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public R<Employee> getById(@PathVariable Long id) {
         log.info("根据id查询员工信息");
-        Employee employee = employeeService.getById(id);
-        if (employee != null) {
-            return R.success(employee);
+        //获取当前登录用户id
+        Long userId = BaseContext.getCurrentId();
+        log.info("=====:{}", userId);
+        //先判断是否是管理员登录
+        if (userId == 1 || id.equals(userId)) {
+            Employee employee = employeeService.getById(id);
+            if (employee != null) {
+                return R.success(employee);
+            }
+            return R.error("出错了~");
         }
-        return R.error("出错了~");
+        return R.error("您没有权限,请联系管理员");
     }
 
 

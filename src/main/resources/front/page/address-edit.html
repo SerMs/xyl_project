@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -18,6 +19,7 @@
     <!--本页面内容的样式-->
     <link href="./../styles/address-edit.css" rel="stylesheet"/>
 </head>
+
 <body>
 <div class="app" id="address_edit">
     <div class="divHead">
@@ -33,7 +35,7 @@
             <span @click="form.sex = '1'" class="spanChecked">
                     <i :class="{iActive:form.sex === '1'}"></i>
                     先生
-                   </span>
+                </span>
             <span @click="form.sex = '0'" class="spanChecked">
                     <i :class="{iActive:form.sex === '0'}"></i>
                     女士
@@ -41,7 +43,8 @@
         </div>
         <div class="divItem">
             <span>手机号：</span>
-            <el-input maxlength='20' placeholder=" 请填写收货人手机号码" style="width: calc(100% - 80rem);" v-model="form.phone"/>
+            <el-input maxlength='20' placeholder=" 请填写收货人手机号码" style="width: calc(100% - 80rem);"
+                      v-model="form.phone"/>
             </el-input>
         </div>
         <div class="divItem">
@@ -52,7 +55,8 @@
         <div class="divItem ">
             <span>标签：</span>
             <span :class="{spanItem:true,spanActiveSchool:activeIndex === index}" :key="index"
-                  @click="form.label = item;activeIndex = index" v-for="(item,index) in labelList">{{item}}</span>
+                  @click="form.label = item;activeIndex = index"
+                  v-for="(item,index) in labelList">{{item}}</span>
         </div>
         <div @click="saveAddress" class="divSave">保存地址</div>
         <div @click="deleteAddress" class="divDelete" v-if="id">删除地址</div>
@@ -168,4 +172,5 @@
     })
 </script>
 </body>
+
 </html>
