@@ -49,6 +49,7 @@ public class SetmealController {
      */
     @ApiOperation(value = "新增套餐接口")
     @PostMapping
+    @CrossOrigin
     @CacheEvict(value = "setmealCache", allEntries = true)
     public R<String> save(@RequestBody SetmealDto setmealDto) {
         log.info("套餐信息：{}", setmealDto);
@@ -66,6 +67,7 @@ public class SetmealController {
      */
     @GetMapping("/page")
     @ApiOperation(value = "套餐分页查询接口")
+    @CrossOrigin
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "页码", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true),
@@ -115,6 +117,7 @@ public class SetmealController {
      * @return
      */
     @DeleteMapping
+    @CrossOrigin
     @ApiOperation(value = "删除套餐")
 //    @CacheEvict(value = "setmealCache", allEntries = true)
     public R<String> delete(@RequestParam List<Long> ids) {
@@ -132,6 +135,7 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/list")
+    @CrossOrigin
     @ApiOperation(value = "套餐条件查询数据接口")
     @Cacheable(value = "setmealCache", key = "#setmeal.categoryId + '_' + #setmeal.status")
     public R<List<Setmeal>> list(Setmeal setmeal) {
@@ -154,6 +158,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping("/status/{status}")
+    @CrossOrigin
     @ApiOperation(value = "套餐单条/批量/状态接口")
     @CacheEvict(value = "setmealCache", allEntries = true)
     public R<String> postDish(@PathVariable int status, @RequestParam List<Long> ids) {
@@ -174,6 +179,7 @@ public class SetmealController {
      * 通过主键查询单条数据,用于数据回显
      */
     @GetMapping("{id}")
+    @CrossOrigin
     @ApiOperation(value = "套餐数据回显接口")
     public R<Setmeal> selectOne(@PathVariable Long id) {
         SetmealDto setmealDto = setmealService.getByIdWithDish(id);
@@ -184,6 +190,7 @@ public class SetmealController {
      * 修改数据
      */
     @PutMapping
+    @CrossOrigin
     @ApiOperation(value = "套餐修改接口")
     @CacheEvict(value = "setmealCache", allEntries = true)
     public R<String> updateById(@RequestBody SetmealDto setmealDto) {

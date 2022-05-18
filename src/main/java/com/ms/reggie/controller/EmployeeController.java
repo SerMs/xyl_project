@@ -119,6 +119,7 @@ public class EmployeeController {
      * @return 返回
      */
     @GetMapping("/page")
+    @CrossOrigin
     public R<Page> page(@Param("page") int page, int pageSize, String name) {
         log.info("page = {},pageSize = {} ,name = {}", page, pageSize, name);
 
@@ -146,6 +147,7 @@ public class EmployeeController {
      * @return
      */
     @PutMapping
+    @CrossOrigin
     public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
         log.info(employee.toString());
         //线程id
@@ -163,6 +165,7 @@ public class EmployeeController {
      * @return
      */
     @GetMapping("/{id}")
+    @CrossOrigin
     public R<Employee> getById(@PathVariable Long id) {
         log.info("根据id查询员工信息");
         //获取当前登录用户id
@@ -187,6 +190,7 @@ public class EmployeeController {
      * @return
      */
     @DeleteMapping
+    @CrossOrigin
     public R<String> deleteByDefault(@RequestBody Employee employee) {
         log.info("根据id删除员工信息:{}", employee.toString());
         employeeService.removeById(employee.getId());

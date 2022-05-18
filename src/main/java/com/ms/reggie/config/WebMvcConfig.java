@@ -31,7 +31,6 @@ import java.util.List;
 @EnableSwagger2
 @EnableKnife4j
 public class WebMvcConfig extends WebMvcConfigurationSupport {
-
     /**
      * 设置静态资源映射
      *

@@ -37,6 +37,7 @@ public class OrdersController {
 
 
     @PostMapping("/submit")
+    @CrossOrigin
     public R<String> list(@RequestBody Orders orders) {
 
         log.info("用户下单:{}", orders.toString());
@@ -57,6 +58,7 @@ public class OrdersController {
      * @return
      */
     @GetMapping("/userPage")
+    @CrossOrigin
     public R userPage(@RequestParam int page, @RequestParam int pageSize) {
 
         //拿到当前登录的用户id
@@ -85,6 +87,7 @@ public class OrdersController {
      * @return
      */
     @GetMapping("/page")
+    @CrossOrigin
     public R<Page> page(@Param("page") int page, @Param("pageSize") int pageSize, @Param("number") String number,
                         @Param("beginTime") String beginTime, @Param("endTime") String endTime) {
 
@@ -133,6 +136,7 @@ public class OrdersController {
      * @return
      */
     @PutMapping
+    @CrossOrigin
     public R<String> status(@RequestBody Orders orders) {
         log.info("派送状态接收参数==status:{},id:=={}", orders.getStatus(), orders.getId());
         //根据id修改订单状态

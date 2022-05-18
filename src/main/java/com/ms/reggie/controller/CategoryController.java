@@ -69,6 +69,7 @@ public class CategoryController {
      * @return
      */
     @PutMapping
+    @CrossOrigin
     public R<String> putCategory(@RequestBody Category category) {
         log.info("修改分类信息:{}", category);
         categoryService.updateById(category);
@@ -82,6 +83,7 @@ public class CategoryController {
      * @return
      */
     @GetMapping("/list")
+    @CrossOrigin
     public R<List<Category>> listR(Category category) {
 
         //条件构造器

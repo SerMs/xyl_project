@@ -8,10 +8,7 @@ import com.ms.reggie.util.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -39,6 +36,7 @@ public class UserController {
     private RedisTemplate redisTemplate;
 
     @PostMapping("/sendMsg")
+    @CrossOrigin
     public R<String> sendMsg(@RequestBody User user, HttpSession session) {
         //获取手机号
         String phone = user.getPhone();
@@ -64,6 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @CrossOrigin
     public R<User> login(@RequestBody Map map, HttpSession session) {
         log.info("map:{}", map.toString());
         //获取手机号
@@ -104,6 +103,7 @@ public class UserController {
 
 
     @PostMapping("/loginout")
+    @CrossOrigin
     public R<String> loginout(HttpSession session) {
         //清理Session中保存的当前登录员工的id
         session.removeAttribute("user");

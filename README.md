@@ -2,7 +2,15 @@
 
 ### 技术栈:
 
-> #### SpringBoot, Mp , Redis ,MySql , Element Plus ,Vue
+> 前端框架:Vue+ Element Plus
+>
+> 后端框架:SpringBoot+Mp
+>
+> 缓存: Redis
+> 数据库: MySql 主从架构(读写分离)
+>
+> 其他:建网SMS
+>
 
 ### 开发历程:
 
@@ -11,7 +19,7 @@
 > 1. 前后台采用Vue+El搭建
 > 2. 前后端采用SpringBoot,mp,MySql
 > 3. 经历五天的日夜兼程,基本功能已经成熟
-> 4. 前端SpringBoot以集成建网SMS-SDK(感谢随意哥的短信账号支持)
+> 4. 前端SpringBoot以集成建网SMS(感谢随意哥的短信账号支持)
 > 5. V1.0版本以发布到master分支
 
 #### 5.12
@@ -26,9 +34,10 @@
 > 3. 修复一些前端页面问题
 > 4. 新加员工删除
 
-#### 读写分离
+#### 5.17 读写分离
 
-> 1. 主从复制未完成
+> 1. 主从复制已完成
+> 2. 读写分离进行中(sharding-JDBC)
 >
 
 ### SwaggerUI接口文档
