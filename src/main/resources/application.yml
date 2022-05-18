@@ -60,7 +60,7 @@ mybatis-plus:
     db-config:
       id-type: ASSIGN_ID
 reggie:
-  path: D:\B站\黑马瑞吉外卖\1 瑞吉外卖项目\资料\图片资源\
+  path: /usr/local/javaapp/regi_img
 
 knife4j:
   enable: true
