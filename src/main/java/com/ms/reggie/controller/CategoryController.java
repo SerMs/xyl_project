@@ -91,7 +91,7 @@ public class CategoryController {
         //添加条件
         queryWrapper.eq(category.getType() != null, Category::getType, category.getType());
         //排序条件
-        queryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
+        queryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getType);
 
         List<Category> list = categoryService.list(queryWrapper);
         return R.success(list);
