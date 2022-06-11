@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ms.reggie.pojo.User;
 import com.ms.reggie.service.UserService;
 import com.ms.reggie.util.R;
-import com.ms.reggie.util.SendMessageUtil;
 import com.ms.reggie.util.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -37,7 +39,6 @@ public class UserController {
     private RedisTemplate redisTemplate;
 
     @PostMapping("/sendMsg")
-    @CrossOrigin
     public R<String> sendMsg(@RequestBody User user, HttpSession session) {
         //获取手机号
         String phone = user.getPhone();
@@ -45,13 +46,13 @@ public class UserController {
             //生成随机的四位随机数
             String code = ValidateCodeUtils.generateValidateCode(6).toString();
             //调用短信服务
-            Integer resultCode = SendMessageUtil.send(phone, "您正在登录湘约楼平台,请妥善保管您得验证码" + code);
-            log.info("生成的验证码为:{},{}", code, SendMessageUtil.getMessage(resultCode));
+//            Integer resultCode = SendMessageUtil.send(phone, "您正在登录湘约楼平台,请妥善保管您得验证码" + code);
+//            log.info("生成的验证码为:{},{}", code, SendMessageUtil.getMessage(resultCode));
             //需要将生成的验证码保存到Session
             log.info("验证码为:{}", code);
 
             //将验证码保存到session中
-//            session.setAttribute(phone, code);
+            session.setAttribute(phone, code);
 
             //将缓存的验证码保存到Redis中,并设置有效期五分钟
             redisTemplate.opsForValue().set(phone, code, 5, TimeUnit.MINUTES);
@@ -63,7 +64,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @CrossOrigin
+
     public R<User> login(@RequestBody Map map, HttpSession session) {
         log.info("map:{}", map.toString());
         //获取手机号
@@ -104,7 +105,6 @@ public class UserController {
 
 
     @PostMapping("/loginout")
-    @CrossOrigin
     public R<String> loginout(HttpSession session) {
         //清理Session中保存的当前登录员工的id
         session.removeAttribute("user");

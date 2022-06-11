@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
@@ -46,14 +47,15 @@ public class GlobalExceptionHandler {
 
     /**
      * 图片路径异常 61d20592-b37f-4d72-a864-07ad5bb8f3bb.jpg (系统找不到指定的文件。)
+     *
      * @param exception
      * @return
      */
-//    @ExceptionHandler(FileNotFoundException.class)
-//    public R<String> exceptionHandler(FileNotFoundException exception) {
-//        log.info(exception.getMessage());
-//        return R.error(exception.getMessage());
-//    }
+    @ExceptionHandler(FileNotFoundException.class)
+    public R<String> exceptionHandler(FileNotFoundException exception) {
+        log.info(exception.getMessage());
+        return R.error("找不到指定图片资源:" + exception.getMessage());
+    }
 //
 //    @ExceptionHandler(FileSizeLimitExceededException.class)
 //    public R<String> exceptionHandler(FileSizeLimitExceededException exception) {

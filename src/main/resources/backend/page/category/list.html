@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -10,135 +11,64 @@
     <link href="../../styles/common.css" rel="stylesheet"/>
     <link href="../../styles/page.css" rel="stylesheet"/>
 </head>
+
 <body>
 <div class="dashboard-container" id="category-app">
     <div class="container">
-        <div
-                class="tableBar"
-                style="display: inline-block"
-        >
-            <el-button
-                    @click="addClass('class')"
-                    class="continue"
-                    type="primary"
-            >
+        <div class="tableBar" style="display: inline-block">
+            <el-button @click="addClass('class')" class="continue" type="primary">
                 + 新增菜品分类
             </el-button>
-            <el-button
-                    @click="addClass('meal')"
-                    type="primary"
-            >
+            <el-button @click="addClass('meal')" type="primary">
                 + 新增套餐分类
             </el-button>
         </div>
-        <el-table
-                :data="tableData"
-                class="tableBox"
-                stripe
-        >
-            <el-table-column
-                    label="分类名称"
-                    prop="name"
-            />
+        <el-table :data="tableData" class="tableBox" stripe>
+            <el-table-column label="分类名称" prop="name"/>
             </el-table-column>
-            <el-table-column
-                    label="分类类型"
-                    prop="type"
-            >
+            <el-table-column label="分类类型" prop="type">
                 <template slot-scope="scope">
                     <span>{{ scope.row.type == '1' ? '菜品分类' : '套餐分类' }}</span>
                 </template>
             </el-table-column>
-            <el-table-column
-                    label="操作时间"
-                    prop="updateTime"
-            >
+            <el-table-column label="操作时间" prop="updateTime">
                 <template slot-scope="scope">
                     {{scope.row.updateTime}}
                 </template>
             </el-table-column>
-            <el-table-column
-                    label="排序"
-                    prop="sort"
-            />
+            <el-table-column label="排序" prop="sort"/>
             </el-table-column>
-            <el-table-column
-                    align="center"
-                    label="操作"
-                    width="160"
-            >
+            <el-table-column align="center" label="操作" width="160">
                 <template slot-scope="scope">
-                    <el-button
-                            @click="editHandle(scope.row)"
-                            class="blueBug"
-                            size="small"
-                            type="text"
-                    >
+                    <el-button @click="editHandle(scope.row)" class="blueBug" size="small" type="text">
                         修改
                     </el-button>
-                    <el-button
-                            @click="deleteHandle(scope.row.id)"
-                            class="delBut non"
-                            size="small"
-                            type="text"
-                    >
+                    <el-button @click="deleteHandle(scope.row.id)" class="delBut non" size="small" type="text">
                         删除
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination
-                :page-size="pageSize"
-                :page-sizes="[10, 20, 30, 40]"
-                :total="counts"
-                @current-change="handleCurrentChange"
-                @size-change="handleSizeChange"
-                class="pageList"
-                layout="total, sizes, prev, pager, next, jumper"
-        ></el-pagination>
+        <el-pagination :page-size="pageSize" :page-sizes="[10, 20, 30, 40]" :total="counts"
+                       @current-change="handleCurrentChange" @size-change="handleSizeChange" class="pageList"
+                       layout="total, sizes, prev, pager, next, jumper"></el-pagination>
     </div>
-    <el-dialog
-            :before-close="handleClose"
-            :title="classData.title"
-            :visible.sync="classData.dialogVisible"
-            width="30%"
-    >
-        <el-form
-                class="demo-form-inline"
-                label-width="100px"
-        >
+    <el-dialog :before-close="handleClose" :title="classData.title" :visible.sync="classData.dialogVisible"
+               width="30%">
+        <el-form class="demo-form-inline" label-width="100px">
             <el-form-item label="分类名称：">
-                <el-input
-                        maxlength="14"
-                        placeholder="请输入分类名称"
-                        v-model="classData.name"
-                />
+                <el-input maxlength="14" placeholder="请输入分类名称" v-model="classData.name"/>
             </el-form-item>
             <el-form-item label="排序：">
                 <el-input placeholder="请输入排序" type="number" v-model="classData.sort"/>
             </el-form-item>
         </el-form>
-        <span
-                class="dialog-footer"
-                slot="footer"
-        >
-        <el-button
-                @click="classData.dialogVisible = false"
-                size="medium"
-        >取 消</el-button>
-        <el-button
-                @click="submitForm()"
-                size="medium"
-                type="primary"
-        >确 定</el-button>
-        <el-button
-                @click="submitForm('go')"
-                class="continue"
-                size="medium"
-                type="primary"
-                v-if="action != 'edit'"
-        > 保存并继续添加 </el-button>
-      </span>
+        <span class="dialog-footer" slot="footer">
+                <el-button @click="classData.dialogVisible = false" size="medium">取 消</el-button>
+                <el-button @click="submitForm()" size="medium" type="primary">确 定</el-button>
+                <el-button @click="submitForm('go')" class="continue" size="medium" type="primary"
+                           v-if="action != 'edit'"> 保存并继续添加 </el-button>
+            </span>
     </el-dialog>
 </div>
 <!-- 开发环境版本，包含了有帮助的命令行警告 -->
@@ -306,4 +236,5 @@
     })
 </script>
 </body>
+
 </html>

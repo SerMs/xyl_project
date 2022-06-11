@@ -34,15 +34,12 @@ public class CommonController {
      * @return
      */
     @PostMapping("/upload")
-    @CrossOrigin
     public R<String> upload(MultipartFile file, HttpServletRequest request) throws IOException {
         //file是一个临时文件,需要转存到指定位置,否则本次请求完成之后临时文件就会删除
         log.info("图片转存操作upload:{}", file.toString());
 
         //原始文件名
         String fileName = file.getOriginalFilename();
-
-
 //        String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
         //使用UUID重新生成文件名,防止文件名重复造成文件覆盖
 //        String fileName = UUID.randomUUID().toString() + suffix;

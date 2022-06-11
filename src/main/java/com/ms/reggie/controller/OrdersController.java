@@ -3,8 +3,10 @@ package com.ms.reggie.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ms.reggie.dto.OrdersDto;
+import com.ms.reggie.pojo.OrderDetail;
 import com.ms.reggie.pojo.Orders;
 import com.ms.reggie.pojo.User;
+import com.ms.reggie.service.OrderDetailService;
 import com.ms.reggie.service.OrdersService;
 import com.ms.reggie.service.UserService;
 import com.ms.reggie.util.BaseContext;
@@ -35,9 +37,11 @@ public class OrdersController {
     @Resource
     private OrdersService ordersService;
 
+    @Resource
+    private OrderDetailService orderDetailService;
+
 
     @PostMapping("/submit")
-    @CrossOrigin
     public R<String> list(@RequestBody Orders orders) {
 
         log.info("用户下单:{}", orders.toString());
@@ -58,8 +62,10 @@ public class OrdersController {
      * @return
      */
     @GetMapping("/userPage")
-    @CrossOrigin
     public R userPage(@RequestParam int page, @RequestParam int pageSize) {
+
+        Page<Orders> pageInfo = new Page<>(page, pageSize);
+        Page<OrdersDto> dtoPage = new Page<>();
 
         //拿到当前登录的用户id
         Long userId = BaseContext.getCurrentId();
@@ -71,11 +77,34 @@ public class OrdersController {
         long count = ordersService.count(queryWrapper);
 
         if (count > 0) {
+            //根据下单时间排序
             queryWrapper.orderByDesc(Orders::getOrderTime);
-            Page<Orders> pages = new Page<>(page, pageSize);
-            return R.success(this.ordersService.page(pages, queryWrapper));
+            ordersService.page(pageInfo, queryWrapper);
+            //对象拷贝
+            BeanUtils.copyProperties(pageInfo, dtoPage, "records");
+            List<Orders> orders = pageInfo.getRecords();
+            log.info("=====oredes===={}", orders.toString());
+
+            List<OrdersDto> list = orders.stream().map((item) -> {
+                OrdersDto ordersDto = new OrdersDto();
+                //对象拷贝
+                BeanUtils.copyProperties(item, ordersDto);
+
+                //根据订单表订单id查询订单详情表的数据
+                String numberId = item.getNumber();
+                LambdaQueryWrapper<OrderDetail> wrapper = new LambdaQueryWrapper<>();
+                LambdaQueryWrapper<OrderDetail> eq = wrapper.eq(OrderDetail::getOrderId, numberId);
+                log.info("====weq===={}", eq);
+                List<OrderDetail> orderDetails = orderDetailService.list(eq);
+                ordersDto.setOrderDetails(orderDetails);
+                return ordersDto;
+            }).collect(Collectors.toList());
+            dtoPage.setRecords(list);
+
+            return R.success(dtoPage);
         }
-        return R.success("没有用户信息");
+
+        return R.success("没有订单信息");
     }
 
 
@@ -87,7 +116,6 @@ public class OrdersController {
      * @return
      */
     @GetMapping("/page")
-    @CrossOrigin
     public R<Page> page(@Param("page") int page, @Param("pageSize") int pageSize, @Param("number") String number,
                         @Param("beginTime") String beginTime, @Param("endTime") String endTime) {
 
@@ -136,7 +164,6 @@ public class OrdersController {
      * @return
      */
     @PutMapping
-    @CrossOrigin
     public R<String> status(@RequestBody Orders orders) {
         log.info("派送状态接收参数==status:{},id:=={}", orders.getStatus(), orders.getId());
         //根据id修改订单状态

@@ -20,7 +20,6 @@ import java.util.List;
  */
 @RestController
 @Slf4j
-@CrossOrigin
 @RequestMapping("shoppingCart")
 public class ShoppingCartController {
 
@@ -37,7 +36,6 @@ public class ShoppingCartController {
      * @return
      */
     @PostMapping("/add")
-    @CrossOrigin
     public R<ShoppingCart> add(@RequestBody ShoppingCart shoppingCart) {
         log.info("购物车数据:{}", shoppingCart);
         //设置用户id,指定当前是哪个用户的购物车数据
@@ -82,7 +80,6 @@ public class ShoppingCartController {
      * @return
      */
     @GetMapping("list")
-    @CrossOrigin
     public R<List<ShoppingCart>> list() {
         log.info("查看购物车");
 
@@ -96,7 +93,6 @@ public class ShoppingCartController {
     }
 
     @DeleteMapping("clean")
-    @CrossOrigin
     public R<String> clean() {
 
         LambdaQueryWrapper<ShoppingCart> queryWrapper = new LambdaQueryWrapper<>();
@@ -113,7 +109,6 @@ public class ShoppingCartController {
      * @return
      */
     @PostMapping("/sub")
-    @CrossOrigin
     public R<ShoppingCart> sub(@RequestBody ShoppingCart shoppingCart) {
         log.info("购物车删除物品:{}", shoppingCart);
         //设置用户id,指定当前是哪个用户的购物车数据
@@ -141,6 +136,8 @@ public class ShoppingCartController {
         if (cartServiceOne.getNumber() == 1) {
             //如果只有一个存在直接删除
             shoppingCartService.removeById(cartServiceOne);
+            ShoppingCart cart = new ShoppingCart();
+            return R.success(cart);
         } else {
             //如果数量大于1则表示存在多份菜品或套餐
             Integer number = cartServiceOne.getNumber();

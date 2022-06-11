@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8"/>
     <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
@@ -38,30 +39,19 @@
             </div>
 
             <el-scrollbar wrap-class="scrollbar-wrapper">
-                <el-menu
-                        :collapse-transition="false"
-                        :default-active="defAct"
-                        :unique-opened="false"
-                        active-text-color="#f4f4f5"
-                        background-color="#343744"
-                        text-color="#bfcbd9"
-                >
+                <el-menu :collapse-transition="false" :default-active="defAct" :unique-opened="false"
+                         active-text-color="#f4f4f5" background-color="#343744" text-color="#bfcbd9">
                     <div :key="item.id" v-for="item in menuList">
                         <el-submenu :index="item.id" v-if="item.children && item.children.length>0">
                             <template slot="title">
                                 <i :class="item.icon" class="iconfont"></i>
                                 <span>{{item.name}}</span>
                             </template>
-                            <el-menu-item
-                                    :index="sub.id"
-                                    :key="sub.id"
-                                    @click="menuHandle(sub,false)"
-                                    v-for="sub in item.children"
-                            >
+                            <el-menu-item :index="sub.id" :key="sub.id" @click="menuHandle(sub,false)"
+                                          v-for="sub in item.children">
                                 <i :class="iconfont" :class="sub.icon"></i>
                                 <span slot="title">{{sub.name}}</span>
-                            </el-menu-item
-                            >
+                            </el-menu-item>
                         </el-submenu>
                         <el-menu-item :index="item.id" @click="menuHandle(item,false)" v-else>
                             <i :class="item.icon" class="iconfont"></i>
@@ -75,9 +65,8 @@
             <!-- <navbar /> -->
             <div class="navbar">
                 <div class="head-lable">
-              <span @click="goBack()" class="goBack" v-if="goBackFlag"
-              ><img alt="" src="images/icons/btn_back@2x.png"/> 返回</span
-              >
+                        <span @click="goBack()" class="goBack" v-if="goBackFlag"><img alt=""
+                                                                                      src="images/icons/btn_back@2x.png"/> 返回</span>
                     <span>{{headTitle}}</span>
                 </div>
                 <div class="right-menu">
@@ -88,16 +77,8 @@
             </div>
             <div class="app-main" v-loading="loading">
                 <div class="divTmp" v-show="loading"></div>
-                <iframe
-                        :src="iframeUrl"
-                        class="c_iframe"
-                        frameborder="0"
-                        height="auto"
-                        id="cIframe"
-                        name="cIframe"
-                        v-show="!loading"
-                        width="100%"
-                ></iframe>
+                <iframe :src="iframeUrl" class="c_iframe" frameborder="0" height="auto" id="cIframe" name="cIframe"
+                        v-show="!loading" width="100%"></iframe>
             </div>
         </div>
     </div>
@@ -190,6 +171,14 @@
             },
             goBack() {
                 // window.location.href = 'javascript:history.go(-1)'
+                console.log("goBack===================");
+                // console.log(item);
+                // console.log(item.id);
+                console.log(this.menuActived);
+                let res = this.menuList.find(item => item.id === this.menuActived)
+                console.log(res);
+                console.log("goBack--------------------");
+
                 const menu = this.menuList.find(item => item.id === this.menuActived)
                 // this.goBackFlag = false
                 // this.headTitle = menu.name
@@ -213,4 +202,5 @@
     })
 </script>
 </body>
+
 </html>

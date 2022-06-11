@@ -1,9 +1,15 @@
 server:
-  port: 8899
+  port: 8888
 spring:
   application:
     #应用的名称，可选
     name: reggie
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: 123456
   shardingsphere:
     datasource:
       names:
@@ -36,16 +42,10 @@ spring:
         show: true #开启SQL显示，默认false
   main:
     allow-bean-definition-overriding: true
-  #  datasource:
-  #    druid:
-  #      driver-class-name: com.mysql.cj.jdbc.Driver
-  #      url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-  #      username: root
-  #      password: 123456
   redis:
     host: 127.0.0.1
     port: 6379
-    database: 1
+    database: 2
     password:
   cache:
     redis:
@@ -60,6 +60,7 @@ mybatis-plus:
     db-config:
       id-type: ASSIGN_ID
 reggie:
+  #  path: C:/Users/18399/Desktop/图片资源/
   path: /usr/local/javaapp/regi_img/
 
 knife4j:

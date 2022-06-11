@@ -16,6 +16,11 @@ function isCellPhone(val) {
 
 //校验账号
 function checkUserName(rule, value, callback) {
+    console.log("校验账号")
+    console.log(rule)
+    console.log(value)
+    console.log(callback)
+    console.log("======")
     if (value == "") {
         callback(new Error("请输入账号"))
     } else if (value.length > 20 || value.length < 3) {

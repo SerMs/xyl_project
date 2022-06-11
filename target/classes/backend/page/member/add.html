@@ -85,6 +85,8 @@
         },
         computed: {
             rules() {
+                console.log("++++++++++++++++++")
+                console.log(checkUserName)
                 return {
                     //账号
                     username: [
@@ -100,6 +102,9 @@
             }
         },
         created() {
+            console.log("我是add页面created");
+            console.log(requestUrlParam('id'));
+            console.log("=====");
             this.id = requestUrlParam('id')
             this.actionType = this.id ? 'edit' : 'add'
             if (this.id) {
@@ -110,6 +115,8 @@
         },
         methods: {
             async init() {
+                console.log("this================");
+                console.log(this);
                 queryEmployeeById(this.id).then(res => {
                     console.log(res)
                     if (String(res.code) === '1') {

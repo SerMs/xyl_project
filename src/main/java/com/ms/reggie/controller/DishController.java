@@ -54,7 +54,6 @@ public class DishController {
      * @return
      */
     @GetMapping("/page")
-    @CrossOrigin
     public R<Page> page(int page, int pageSize, String name) {
         //创建分页构造器对象
         Page<Dish> pageInfo = new Page<>(page, pageSize);
@@ -103,7 +102,6 @@ public class DishController {
      * @return
      */
     @PostMapping
-    @CrossOrigin
     @CacheEvict(value = "DishCache", allEntries = true)
     public R<String> save(@RequestBody DishDto dishDto) {
         dishService.saveWithFlavor(dishDto);
@@ -117,7 +115,6 @@ public class DishController {
      * @return
      */
     @PutMapping
-    @CrossOrigin
     @CacheEvict(value = "DishCache", allEntries = true)
     public R<String> put(@RequestBody DishDto dishDto) {
         dishService.updateWithFlavor(dishDto);
@@ -131,7 +128,6 @@ public class DishController {
      * @return
      */
     @GetMapping("/{id}")
-    @CrossOrigin
     public R<DishDto> get(@PathVariable Long id) {
         DishDto dishDto = dishService.getByIdWithFlavor(id);
         return R.success(dishDto);
@@ -144,7 +140,6 @@ public class DishController {
      * @return
      */
     @DeleteMapping
-    @CrossOrigin
     @CacheEvict(value = "DishCache", allEntries = true)
     public R<String> deleteDish(@RequestParam List<Long> ids) {
         dishService.deleteByIdWithFlavor(ids);
@@ -160,7 +155,6 @@ public class DishController {
      * @return
      */
     @PostMapping("/status")
-    @CrossOrigin
     @CacheEvict(value = "DishCache", allEntries = true)
     public R<String> postDish(@RequestParam List<Long> ids, @RequestParam int status) {
         for (Long id : ids) {
@@ -195,7 +189,6 @@ public class DishController {
 //        return R.success(list);
 //    }
     @GetMapping("/list")
-    @CrossOrigin
     @Cacheable(value = "DishCache", key = "#dish.categoryId + '_' + #dish.status", condition = "#dish.getStatus() != null")
     public R<List<DishDto>> list(Dish dish) {
 //        log.info("dish:{}", dish);

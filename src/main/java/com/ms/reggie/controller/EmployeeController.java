@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ms.reggie.pojo.Employee;
 import com.ms.reggie.service.EmployeeService;
-import com.ms.reggie.util.BaseContext;
 import com.ms.reggie.util.R;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -119,7 +118,6 @@ public class EmployeeController {
      * @return 返回
      */
     @GetMapping("/page")
-    @CrossOrigin
     public R<Page> page(@Param("page") int page, int pageSize, String name) {
         log.info("page = {},pageSize = {} ,name = {}", page, pageSize, name);
 
@@ -147,7 +145,6 @@ public class EmployeeController {
      * @return
      */
     @PutMapping
-    @CrossOrigin
     public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
         log.info(employee.toString());
         //线程id
@@ -165,21 +162,12 @@ public class EmployeeController {
      * @return
      */
     @GetMapping("/{id}")
-    @CrossOrigin
     public R<Employee> getById(@PathVariable Long id) {
-        log.info("根据id查询员工信息");
-        //获取当前登录用户id
-        Long userId = BaseContext.getCurrentId();
-        log.info("=====:{}", userId);
-        //先判断是否是管理员登录
-        if (userId == 1 || id.equals(userId)) {
-            Employee employee = employeeService.getById(id);
-            if (employee != null) {
-                return R.success(employee);
-            }
-            return R.error("出错了~");
+        Employee employee = employeeService.getById(id);
+        if (employee != null) {
+            return R.success(employee);
         }
-        return R.error("您没有权限,请联系管理员");
+        return R.error("出错了~");
     }
 
 
@@ -190,7 +178,6 @@ public class EmployeeController {
      * @return
      */
     @DeleteMapping
-    @CrossOrigin
     public R<String> deleteByDefault(@RequestBody Employee employee) {
         log.info("根据id删除员工信息:{}", employee.toString());
         employeeService.removeById(employee.getId());
