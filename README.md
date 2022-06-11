@@ -1,12 +1,12 @@
-## SerMs外卖系统
+## 湘约楼点餐系统(SerMs&扣毛)
 
 ### 技术栈:
 
-> 前端框架:Vue+ Element Plus
+> 前台技术栈:Vue+ Element Plus+ Vant2 + VueX + router
 >
-> 后端框架:SpringBoot+Mp
+> 后端框架:SpringBoot+Mp+SSM
 >
-> 缓存: Redis
+> 缓存中间件: Redis
 > 数据库: MySql 主从架构(读写分离)
 >
 > 其他:建网SMS
@@ -39,6 +39,8 @@
 > 1. 主从复制已完成
 > 2. 读写分离进行中(sharding-JDBC)
 >
+
+#### ....
 
 ### SwaggerUI接口文档
 
