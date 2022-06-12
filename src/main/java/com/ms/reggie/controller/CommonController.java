@@ -34,6 +34,7 @@ public class CommonController {
      * @return
      */
     @PostMapping("/upload")
+    @CrossOrigin
     public R<String> upload(MultipartFile file, HttpServletRequest request) throws IOException {
         //file是一个临时文件,需要转存到指定位置,否则本次请求完成之后临时文件就会删除
         log.info("图片转存操作upload:{}", file.toString());
@@ -52,9 +53,12 @@ public class CommonController {
             //目录不存在
             dir.mkdir();
         }
+        if (!file.isEmpty()) {
+            file.transferTo(new File(basePath + fileName));
+            return R.success(fileName);
+        }
+        return R.error("上传失败");
 
-        file.transferTo(new File(basePath + fileName));
-        return R.success(fileName);
     }
 
 

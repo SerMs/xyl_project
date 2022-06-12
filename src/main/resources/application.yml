@@ -1,15 +1,21 @@
 server:
   port: 8888
+  ssl:
+    enabled: false
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   application:
     #应用的名称，可选
     name: reggie
-  datasource:
-    druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: root
-      password: 123456
+  #  datasource:
+  #    druid:
+  #      driver-class-name: com.mysql.cj.jdbc.Driver
+  #      url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+  #      username: root
+  #      password: 123456
   shardingsphere:
     datasource:
       names:
@@ -18,14 +24,14 @@ spring:
       master:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://192.168.174.100:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://47.99.194.162:3306/xyl?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
         username: root
         password: root
       # 从数据源
       slave:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://192.168.174.101:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://112.124.201.110:3306/xyl?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
         username: root
         password: root
     masterslave:
@@ -60,8 +66,8 @@ mybatis-plus:
     db-config:
       id-type: ASSIGN_ID
 reggie:
-  #  path: C:/Users/18399/Desktop/图片资源/
-  path: /usr/local/javaapp/regi_img/
+  path: C:/Users/18399/Desktop/图片资源/
+#  path: /usr/local/javaapp/regi_img/
 
 knife4j:
   enable: true
