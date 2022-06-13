@@ -66,8 +66,8 @@ mybatis-plus:
     db-config:
       id-type: ASSIGN_ID
 reggie:
-  path: C:/Users/18399/Desktop/图片资源/
-#  path: /usr/local/javaapp/regi_img/
+  path: /usr/local/javaapp/xyl_img/
+#  path: C:/Users/18399/Desktop/图片资源/
 
 knife4j:
   enable: true
