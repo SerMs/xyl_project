@@ -37,6 +37,7 @@ public class CategoryController {
         //创建排序规则
         queryWrapper.orderByAsc(Category::getSort);
 
+        //分页查询
         Page<Category> pages = new Page<>(page, pageSize);
         return R.success(this.categoryService.page(pages, queryWrapper));
     }

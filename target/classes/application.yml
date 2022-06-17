@@ -49,10 +49,10 @@ spring:
   main:
     allow-bean-definition-overriding: true
   redis:
-    host: 127.0.0.1
+    host: 47.99.194.162
     port: 6379
     database: 2
-    password:
+    password: 1807090626@Hgm
   cache:
     redis:
       #设置缓存有效时间
