@@ -3,6 +3,8 @@ package com.ms.reggie.pojo;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,29 +17,34 @@ import java.time.LocalDateTime;
  * @since 2022-05-07 22:32:02
  */
 @Data
+@ApiModel("菜品及套餐分类")
 public class Category implements Serializable {
     private static final long serialVersionUID = -66132363278111401L;
     /**
      * 主键
      */
+    @ApiModelProperty("主键")
     @TableId(value = "id")
     private Long id;
 
     /**
      * 类型   1 菜品分类 2 套餐分类
      */
+    @ApiModelProperty("类型 1 菜品分类 2 套餐分类")
     @TableField(value = "type")
     private Integer type;
 
     /**
      * 分类名称
      */
+    @ApiModelProperty("分类名称")
     @TableField(value = "name")
     private String name;
 
     /**
      * 顺序
      */
+    @ApiModelProperty("顺序")
     @TableField(value = "sort")
     private Integer sort;
 
@@ -45,6 +52,7 @@ public class Category implements Serializable {
     /**
      * 创建时间
      */
+    @ApiModelProperty("创建时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
@@ -52,18 +60,21 @@ public class Category implements Serializable {
     /**
      * 修改时间
      */
+    @ApiModelProperty("修改时间")
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     /**
      * 创建人
      */
+    @ApiModelProperty("创建人")
     @TableField(value = "create_user", fill = FieldFill.INSERT)
     private Long createUser;
 
     /**
      * 修改人
      */
+    @ApiModelProperty("修改人")
     @TableField(value = "update_user", fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
 }

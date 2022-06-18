@@ -1,8 +1,14 @@
 server:
   port: 8888
+  #  tomcat:
+  #    basedir: C:/Users/18399/Desktop/
   ssl:
     enabled: false
 spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: false
   servlet:
     multipart:
       max-file-size: 50MB
@@ -71,3 +77,10 @@ reggie:
 
 knife4j:
   enable: true
+
+#七牛配置
+qiniu:
+  accessKey: ID_Vi-bQ_x43W3KSxy8y9WuaAp2H38tYEM3tslEF
+  secretKey: 6qU71m1te4NKQI1ue5bmCL97x9eeaX5Zrih9AtCl
+  bucket: serms
+  domain: https://serms.xyz/

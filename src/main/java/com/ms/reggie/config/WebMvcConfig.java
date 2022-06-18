@@ -13,6 +13,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -28,7 +29,7 @@ import java.util.List;
  */
 @Slf4j
 @Configuration
-@EnableSwagger2
+@EnableSwagger2     //导入knife4j相关依赖
 @EnableKnife4j
 public class WebMvcConfig extends WebMvcConfigurationSupport {
     /**
@@ -57,6 +58,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     }
 
+
+    /*knife4j API 文档*/
     @Bean
     public Docket createRestApi() {
         //文档类型
@@ -70,11 +73,11 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("校园外卖")
-                .version("1.0")
-                .termsOfServiceUrl("http://serms.top")
-                .description("外卖接口文档")
+                .title("湘约楼")
+                .version("8.8.8")
+                .termsOfServiceUrl("http://47.99.194.162:8888/")
+                .contact(new Contact("SerMs", "https://serms.top", "1839928782@qq.com"))
+                .description("点餐接口文档")
                 .build();
     }
-
 }
