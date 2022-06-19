@@ -1,6 +1,7 @@
 package com.ms.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ms.reggie.dto.DishDto;
 import com.ms.reggie.pojo.Category;
@@ -44,6 +45,13 @@ public class DishController {
     @Resource
     private CategoryService categoryService;
 
+    @GetMapping("/categoiryList")
+    public R<List> GetCategoiry() {
+        QueryWrapper<Category> categoryQueryWrapper = new QueryWrapper<>();
+        List<Category> list = categoryService.list(categoryQueryWrapper.select("name", "id"));
+        log.info("===={}", list);
+        return R.success(list);
+    }
 
     /**
      * 分页查询菜品列表
@@ -54,7 +62,8 @@ public class DishController {
      * @return
      */
     @GetMapping("/page")
-    public R<Page> page(int page, int pageSize, String name) {
+    public R<Page> page(int page, int pageSize, String name, long categoiryid) {
+        log.info("====categoiry__id值为:::{}", categoiryid);
         //创建分页构造器对象
         Page<Dish> pageInfo = new Page<>(page, pageSize);
         Page<DishDto> dishDtoPage = new Page<>();
@@ -63,7 +72,8 @@ public class DishController {
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
 
         //添加过滤条件
-        queryWrapper.like(name != null, Dish::getName, name);
+        queryWrapper.like(name != null, Dish::getName, name).eq(categoiryid != 0, Dish::getCategoryId, categoiryid);
+
 
         //排序条件
         queryWrapper.orderByDesc(Dish::getUpdateTime);
