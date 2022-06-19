@@ -77,18 +77,18 @@ public class CategoryController {
     }
 
     /**
-     * 查询所有菜品分类
+     * 根据类型查询所有分类
      *
-     * @param category
+     * @param TypeId
      * @return
      */
     @GetMapping("/list")
-    public R<List<Category>> listR(Category category) {
-
+    public R<List<Category>> listR(Integer TypeId) {
+        log.info("====TypeId==={}", TypeId);
         //条件构造器
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         //添加条件
-        queryWrapper.eq(category.getType() != null, Category::getType, category.getType());
+        queryWrapper.eq(TypeId != null, Category::getType, TypeId);
         //排序条件
         queryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getType);
 
