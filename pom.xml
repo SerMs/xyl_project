@@ -24,6 +24,21 @@
     </properties>
 
     <dependencies>
+        <!--图片验证码依赖-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>kisso</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
+        <!-- 安装 EasyCaptcha 依賴-->
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
+
         <!--配置七牛云图床-->
         <dependency>
             <groupId>com.qiniu</groupId>

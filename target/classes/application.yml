@@ -84,3 +84,8 @@ qiniu:
   secretKey: 6qU71m1te4NKQI1ue5bmCL97x9eeaX5Zrih9AtCl
   bucket: serms
   domain: https://serms.xyz/
+  
+# easy-captcha配置
+easycaptcha:
+  #  验证码类型配置 查看 LoginProperties 类
+  code-type: arithmetic

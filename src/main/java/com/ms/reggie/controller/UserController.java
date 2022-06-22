@@ -4,14 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ms.reggie.pojo.User;
 import com.ms.reggie.service.UserService;
 import com.ms.reggie.util.R;
+import com.ms.reggie.util.SendMessageUtil;
 import com.ms.reggie.util.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -39,15 +36,26 @@ public class UserController {
     private RedisTemplate redisTemplate;
 
     @PostMapping("/sendMsg")
-    public R<String> sendMsg(@RequestBody User user, HttpSession session) {
-        //获取手机号
-        String phone = user.getPhone();
-        if (StringUtils.isNotEmpty(phone)) {
+    public R sendMsg(@RequestParam String key,
+                     @RequestParam String phone,
+                     @RequestParam String captcha, HttpSession session) {
+        log.info("=====验证码获取==={}===={}===={}", key, captcha, phone);
+        //从Redis获取缓存的图形验证码
+        boolean msg = false;
+        Object codeInSession = redisTemplate.opsForValue().get(key);
+        if (codeInSession != null && codeInSession.equals(captcha)) {
+            //删除redis
+            //如果登录成功,就删除缓存的验证码
+            redisTemplate.delete(key);
+            log.info("删除验证码");
+            msg = true;
+        }
+        if (msg) {
             //生成随机的四位随机数
             String code = ValidateCodeUtils.generateValidateCode(6).toString();
             //调用短信服务
-//            Integer resultCode = SendMessageUtil.send(phone, "您正在登录湘约楼平台,请妥善保管您得验证码" + code);
-//            log.info("生成的验证码为:{},{}", code, SendMessageUtil.getMessage(resultCode));
+            Integer resultCode = SendMessageUtil.send(phone, "您正在登录湘约楼平台,请妥善保管您得验证码" + code);
+            log.info("生成的验证码为:{},{}", code, SendMessageUtil.getMessage(resultCode));
             //需要将生成的验证码保存到Session
             log.info("验证码为:{}", code);
 
@@ -69,7 +77,6 @@ public class UserController {
         log.info("map:{}", map.toString());
         //获取手机号
         String phone = map.get("phone").toString();
-
         //获取验证码
         String code = map.get("code").toString();
 
